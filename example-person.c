@@ -19,20 +19,106 @@
  */
 
 #include "example-person.h"
-struct _ExamplePerson
+/* Instance structure, this is not created by G_DEFINE_TYPE */
+struct _ExamplePerson 
 {
     GObject parent_instance;
+    gchar   *name;
 };
 
+/* Define the ExamplePerson declared in the header file */
 G_DEFINE_TYPE(ExamplePerson, example_person, G_TYPE_OBJECT)
+
+/* Properties declaration */
+enum
+{
+  PROP_0,
+  PROP_NAME,
+  PROP_LAST
+};
+
+/* Placeholder for properties */
+static GParamSpec *properties [PROP_LAST]; 
+
+static void
+example_person_get_property (GObject    *object,
+                             guint      prop_id,
+                             GValue     *value,
+                             GParamSpec *pspec)
+{
+  ExamplePerson *self = (ExamplePerson *)object;
+
+  switch (prop_id)
+    {
+    case PROP_NAME:
+        g_value_set_string (value, example_person_get_name(self));
+        break;
+    default:
+        break;
+    }
+}
+
+static void
+example_person_set_property (GObject      *object,
+                             guint        prop_id,
+                             const GValue *value,
+                             GParamSpec   *pspec)
+{
+  ExamplePerson *self = (ExamplePerson *)object;
+
+  switch (prop_id)
+    {
+    case PROP_NAME:
+      example_person_set_name (self, g_value_get_string(value));
+      break;
+    default:
+      break;
+    }
+}
 
 static void
 example_person_class_init(ExamplePersonClass *klass)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS(klass);
+
+  /* Properties need to accessed through GObject interface
+     here we are overiding virtual methods for setting and
+     getting properties of GObject */
+  object_class->get_property = example_person_get_property;
+  object_class->set_property = example_person_set_property;
+
+  /* Initialize the property, names, description, default value, access flags */
+  properties[PROP_NAME] =
+    g_param_spec_string ("name",
+                         "Name",
+                         "Name of the person",
+                         NULL,
+                         (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  /* Installs the properties */
+  g_object_class_install_properties (object_class,
+                               PROP_LAST,
+                               properties);
 }
 
 static void
 example_person_init(ExamplePerson *self)
 {
 
+}
+
+const gchar *
+example_person_get_name(ExamplePerson *self)
+{
+  return self->name;
+}
+ 
+void
+example_person_set_name(ExamplePerson *self,
+                        const gchar   *name)
+{
+  if (g_strcmp0(name, self->name) != 0)
+    {
+      g_free(self->name);
+      self->name = g_strdup(name);
+    }
 }
