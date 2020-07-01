@@ -18,13 +18,7 @@
  * along with example-person.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "example-person.h"
-/* Instance structure, this is not created by G_DEFINE_TYPE */
-struct _ExamplePerson 
-{
-    GObject parent_instance;
-    gchar   *name;
-};
+#include "example-person-private.h"
 
 /* Define the ExamplePerson declared in the header file */
 G_DEFINE_TYPE(ExamplePerson, example_person, G_TYPE_OBJECT)
@@ -37,8 +31,16 @@ enum
   PROP_LAST
 };
 
+/* Signal declaration */
+enum
+{
+  YO,
+  SIGNAL_LAST
+};
+
 /* Placeholder for properties */
 static GParamSpec *properties [PROP_LAST]; 
+static guint signals [SIGNAL_LAST];
 
 static void
 example_person_get_property (GObject    *object,
@@ -98,6 +100,21 @@ example_person_class_init(ExamplePersonClass *klass)
   g_object_class_install_properties (object_class,
                                PROP_LAST,
                                properties);
+
+  /* Initialize signal , name, type, when to run, callback, accum and its params, cb param type, args*/
+  signals [YO] = 
+    g_signal_new ("yo",
+                  G_TYPE_FROM_CLASS (klass),
+                  G_SIGNAL_RUN_LAST,
+                  0, /* G_STRUCT_OFFSET (ExamplePersonClass, yo) */
+                  NULL, NULL, NULL,
+                  G_TYPE_NONE, 0);
+}
+
+void
+example_person_emit_yo (ExamplePerson *self)
+{
+  g_signal_emit (self, signals [YO], 0);
 }
 
 static void
