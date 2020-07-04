@@ -17,19 +17,19 @@
 
 #include "shape.h"
 
-G_DEFINE_TYPE(ShapeType, shape_type, G_TYPE_OBJECT);
+G_DEFINE_TYPE(Shape, shape, G_TYPE_OBJECT);
 
 /* dispatcher method */
 guint
-shape_type_calculate_area(ShapeType *self)
+shape_calculate_area(Shape *self)
 {
-  ShapeTypeClass *klass;
+  ShapeClass *klass;
 
   g_print("%s",__func__);
 
-  g_return_val_if_fail(SHAPE_IS_TYPE(self), 1);
+  g_return_val_if_fail(_IS_SHAPE(self), 1);
 
-  klass = SHAPE_TYPE_GET_CLASS(self);
+  klass = _SHAPE_GET_CLASS(self);
 
   if (klass->calculate_area == NULL)
     {
@@ -42,27 +42,27 @@ shape_type_calculate_area(ShapeType *self)
 
 /* place holder for the dispose function */
 static void
-shape_type_dispose(GObject *object)
+shape_dispose(GObject *object)
 {
   g_print("%s: %p\n",__func__, object);
 }
 
 /* place holder for the finalize function */
 static void
-shape_type_finalize(GObject *object)
+shape_finalize(GObject *object)
 {
   g_print("%s: %p\n",__func__, object);
 }
 
 /* instance init function, init your public and private data here */
 static void
-shape_type_init(ShapeType *self)
+shape_init(Shape *self)
 {
   g_print("%s: %p\n",__func__, self);
 }
 
 static void
-shape_type_class_init (ShapeTypeClass *klass)
+shape_class_init (ShapeClass *klass)
 {
   g_print("%s : %p\n", __func__, klass);
   /* get parent GObject class */
@@ -72,6 +72,6 @@ shape_type_class_init (ShapeTypeClass *klass)
   klass->calculate_area = NULL;
 
   /* hook instance dispose function */
-  object_class->dispose = shape_type_dispose;
-  object_class->finalize = shape_type_finalize;
+  object_class->dispose = shape_dispose;
+  object_class->finalize = shape_finalize;
 }

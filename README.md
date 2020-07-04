@@ -17,9 +17,11 @@ gcc -Wall -c -o libtest.so example-person.c `pkg-config --cflags --libs gobject-
 
 ## shape
 ```cd shape```
-```
-gcc -Wall -c -o libtest.so  shape.c `pkg-config --cflags --libs gobject-2.0`
-```
+```mkdir -p build```
+```cd build```
+```cmake ..```
+```make```
+```./shape_test```
 
 # how to check symbol
 ```nm <bin/lib name>```

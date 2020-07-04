@@ -20,18 +20,18 @@
 
 G_BEGIN_DECLS
 /* Type declaration */
-#define SHAPE_TYPE_TYPE (shape_type_get_type())
-G_DECLARE_DERIVABLE_TYPE (ShapeType, shape_type, SHAPE, TYPE, GObject)
+#define SHAPE_TYPE (shape_get_type())
+G_DECLARE_DERIVABLE_TYPE (Shape, shape, , SHAPE, GObject)
 
 /* class struct is decalared by G_DECLARE, but we need a virtual public method hence we are defining it */
-struct _ShapeTypeClass
+struct _ShapeClass
 {
   GObjectClass parent;
-  guint (*calculate_area) (ShapeType *self);
+  guint (*calculate_area) (Shape *self);
 };
 
 /* Dispatcher method for calculate_area */
-guint shape_type_calculate_area (ShapeType *self);
+guint shape_calculate_area (Shape *self);
 
 G_END_DECLS
 #endif // !SHAPE_H
