@@ -17,10 +17,15 @@ gcc -Wall -c -o libtest.so example-person.c `pkg-config --cflags --libs gobject-
 
 ## shape
 ```cd shape```
+
 ```mkdir -p build```
+
 ```cd build```
+
 ```cmake ..```
+
 ```make```
+
 ```./shape_test```
 
 # how to check symbol
