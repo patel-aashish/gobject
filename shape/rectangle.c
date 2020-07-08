@@ -18,21 +18,127 @@
 #include "rectangle.h"
 
 /* For final types instance struct should be defined in source file */
+typedef struct _RectanglePrivate {
+    guint width;
+    guint height;
+} RectanglePrivate;
+
 struct _Rectangle
 {
     Shape parent;
+    RectanglePrivate *priv;
 };
 
-G_DEFINE_TYPE(Rectangle, rectangle, SHAPE_TYPE)
+/* Defines a type with private data and a convinience function for getting the private structure */
+G_DEFINE_TYPE_WITH_PRIVATE(Rectangle, rectangle, SHAPE_TYPE)
+
+guint rectangle_calculate_area(Rectangle* self);
 
 static void
-rectangle_init (Rectangle *self)
+rectangle_init(Rectangle* self)
 {
+  g_print("%s: %p\n", __func__, self);
 
+  RectanglePrivate *priv;
+
+  /* Initialize private data members */
+  self->priv = priv = rectangle_get_instance_private(self);
+  priv->width = 0;
+  priv->height = 0;
 }
 
 static void
-rectangle_class_init (RectangleClass *Klass)
+rectangle_class_init (RectangleClass *klass)
 {
+  g_print("%s: %p\n", __func__, klass);
 
+  ShapeClass *shape_class = _SHAPE_GET_CLASS(klass);
+
+  shape_class->calculate_area = (void *)rectangle_calculate_area;
+}
+
+Rectangle*
+rectangle_new (guint width,
+               guint height)
+{
+  g_print("%s \n", __func__);
+  Rectangle* rect;
+  rect = g_object_new(RECTANGLE_TYPE, NULL);
+  g_assert(rect != NULL);
+
+  rect->priv->width = width;
+  rect->priv->height= height;
+
+  g_print("%s: Rectangle(%p) created with width(%u) and height(%u)\n",
+          __func__,rect, width, height);
+
+  return rect;
+}
+
+void
+rectangle_free (Rectangle *self)
+{
+  g_print("%s\n", __func__);
+  g_assert(self != NULL);
+  g_return_if_fail(_IS_RECTANGLE(self));
+
+  g_object_unref(self);
+}
+
+guint
+rectangle_calculate_area (Rectangle *self)
+{
+  g_print("%s\n", __func__);
+  g_assert(self != NULL);
+  RectanglePrivate *priv = rectangle_get_instance_private(self);
+  return (priv->width) * (priv->height);
+}
+
+void
+rectangle_set_width(Rectangle *self,
+                    guint     width)
+{
+  g_print("%s\n", __func__);
+  g_assert(self != NULL);
+  g_return_if_fail(_IS_RECTANGLE(self));
+  RectanglePrivate *priv = rectangle_get_instance_private(self);
+  if(width != priv->width)
+    {
+      priv->width = width;
+    }
+}
+
+void
+rectangle_set_height(Rectangle *self,
+                     guint height)
+{
+  g_print("%s\n", __func__);
+  g_assert(self != NULL);
+  g_return_if_fail(_IS_RECTANGLE(self));
+  RectanglePrivate *priv = rectangle_get_instance_private(self);
+
+  if (height != priv->height)
+    {
+      priv->height = height;
+    }
+}
+
+guint
+rectangle_get_width(Rectangle *self)
+{
+  g_print("%s\n",__func__);
+  g_assert(self != NULL);
+  g_return_val_if_fail(_IS_RECTANGLE(self), -1);
+  RectanglePrivate *priv = rectangle_get_instance_private(self);
+  return priv->width;
+}
+
+guint
+rectangle_get_height(Rectangle *self)
+{
+  g_print("%s\n", __func__);
+  g_assert(self != NULL);
+  g_return_val_if_fail(_IS_RECTANGLE(self), -1);
+  RectanglePrivate* priv = rectangle_get_instance_private(self);
+  return priv->height;
 }
