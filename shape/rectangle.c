@@ -18,24 +18,25 @@
 #include "rectangle.h"
 
 /* For final types instance struct should be defined in source file */
-typedef struct _RectanglePrivate {
-    guint width;
-    guint height;
+typedef struct _RectanglePrivate
+{
+  guint width;
+  guint height;
 } RectanglePrivate;
 
 struct _Rectangle
 {
-    Shape parent;
-    RectanglePrivate *priv;
+  Shape parent;
+  RectanglePrivate *priv;
 };
 
-/* Defines a type with private data and a convinience function for getting the private structure */
-G_DEFINE_TYPE_WITH_PRIVATE(Rectangle, rectangle, SHAPE_TYPE)
+/* Defines a type with private data and a convenience function for getting the private structure */
+G_DEFINE_TYPE_WITH_PRIVATE (Rectangle, rectangle, SHAPE_TYPE)
 
-guint rectangle_calculate_area(Rectangle* self);
+guint rectangle_calculate_area (Rectangle* self);
 
 static void
-rectangle_init(Rectangle* self)
+rectangle_init (Rectangle* self)
 {
   g_print("%s: %p\n", __func__, self);
 
@@ -52,7 +53,7 @@ rectangle_class_init (RectangleClass *klass)
 {
   g_print("%s: %p\n", __func__, klass);
 
-  ShapeClass *shape_class = _SHAPE_GET_CLASS(klass);
+  ShapeClass *shape_class = _SHAPE_CLASS(klass);
 
   shape_class->calculate_area = (void *)rectangle_calculate_area;
 }
@@ -63,14 +64,16 @@ rectangle_new (guint width,
 {
   g_print("%s \n", __func__);
   Rectangle* rect;
+  RectanglePrivate *priv;
   rect = g_object_new(RECTANGLE_TYPE, NULL);
   g_assert(rect != NULL);
 
-  rect->priv->width = width;
-  rect->priv->height= height;
+  priv = rectangle_get_instance_private(rect);
+  priv->width = width;
+  priv->height= height;
 
   g_print("%s: Rectangle(%p) created with width(%u) and height(%u)\n",
-          __func__,rect, width, height);
+      __func__, rect, priv->width, priv->height);
 
   return rect;
 }
@@ -91,6 +94,7 @@ rectangle_calculate_area (Rectangle *self)
   g_print("%s\n", __func__);
   g_assert(self != NULL);
   RectanglePrivate *priv = rectangle_get_instance_private(self);
+
   return (priv->width) * (priv->height);
 }
 

@@ -20,7 +20,7 @@
 
 G_BEGIN_DECLS
 
-#define RECTANGLE_TYPE (shape_get_type())
+#define RECTANGLE_TYPE (rectangle_get_type())
 
 G_DECLARE_FINAL_TYPE(Rectangle, rectangle, , RECTANGLE, Shape)
 
