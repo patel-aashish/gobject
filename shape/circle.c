@@ -30,7 +30,57 @@ struct _Circle
 
 G_DEFINE_TYPE_WITH_PRIVATE (Circle, circle, SHAPE_TYPE)
 
+/* Property for accessing private data via gobject set/get property mechanism */
+enum
+{
+  PROP_0,
+  PROP_RADIUS,
+  PROP_LAST
+};
+
+static GParamSpec *properties [PROP_LAST];
+
 guint circle_calculate_area (Circle *self);
+
+static void
+circle_get_property (GObject    *object,
+                     guint      prop_id,
+                     GValue     *value,
+                     GParamSpec *pspec)
+{
+  g_print("%s\n", __func__);
+  Circle *self = _CIRCLE(object);
+
+  switch (prop_id)
+    {
+    case PROP_RADIUS:
+      g_value_set_uint(value, circle_get_radius(self));
+      break;
+    default:
+      g_print("%s: %u is not supported\n", __func__, prop_id);
+      break;
+    }
+}
+
+static void
+circle_set_property (GObject      *object,
+                     guint        prop_id,
+                     const GValue *value,
+                     GParamSpec   *pspec)
+{
+  g_print("%s\n", __func__);
+  Circle *self = _CIRCLE(object);
+
+  switch (prop_id)
+  {
+  case PROP_RADIUS:
+    circle_set_radius(self, g_value_get_uint(value));
+    break;
+  default:
+    g_print("%s: %u is not supported\n", __func__,prop_id);
+    break;
+  }
+}
 
 static void
 circle_init (Circle *self)
@@ -49,8 +99,23 @@ circle_class_init (CircleClass *klass)
   g_print("%s: %p \n", __func__, klass);
 
   ShapeClass *shape_class = _SHAPE_CLASS(klass);
+  GObjectClass *gobject_class = G_OBJECT_CLASS(klass);
 
   shape_class->calculate_area = (void *)circle_calculate_area;
+  gobject_class->get_property = circle_get_property;
+  gobject_class->set_property = circle_set_property;
+
+  properties[PROP_RADIUS] = g_param_spec_uint("radius",
+      "radius",                 /* nickname */
+      "set/get circle radius",  /* description */
+      0,                        /* min value */
+      G_MAXUINT,                /* max value */
+      0,                        /* default */
+      G_PARAM_CONSTRUCT | G_PARAM_READWRITE);
+
+  g_object_class_install_properties (gobject_class,
+                                     PROP_LAST,
+                                     properties);
 }
 
 Circle*

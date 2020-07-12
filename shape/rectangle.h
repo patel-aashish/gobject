@@ -27,6 +27,7 @@ G_DECLARE_FINAL_TYPE(Rectangle, rectangle, , RECTANGLE, Shape)
 Rectangle* rectangle_new (guint width, guint height);
 void       rectangle_free(Rectangle *self);
 
+/* helper function for set/get private data members */
 void  rectangle_set_width (Rectangle *self, guint width);
 void  rectangle_set_height(Rectangle *self, guint height);
 guint rectangle_get_width (Rectangle *self);

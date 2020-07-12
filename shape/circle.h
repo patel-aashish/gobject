@@ -25,6 +25,7 @@ G_DECLARE_FINAL_TYPE(Circle, circle, ,CIRCLE, Shape)
 Circle* circle_new  (guint radius);
 void    circle_free (Circle *circle);
 
+/* Helper functions for accessing the private data */
 void  circle_set_radius (Circle *self, guint radius);
 guint circle_get_radius (Circle *self);
 
