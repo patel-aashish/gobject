@@ -25,7 +25,7 @@ shape_calculate_area(Shape *self)
 {
   ShapeClass *klass;
 
-  g_print("%s",__func__);
+  g_print("%s\n",__func__);
 
   g_return_val_if_fail(_IS_SHAPE(self), 1);
 

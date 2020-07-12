@@ -17,20 +17,22 @@
 
 
 #include "shape.h"
+#include "rectangle.h"
+#include "circle.h"
 
 int 
 main(int argc, char **argv)
 {
-  Shape *shape1;
-  Shape *shape2;
+  Rectangle *rect;
+  Circle    *circle;
+  rect = rectangle_new(4,5);
+  g_print("Rectangle(%p) is created.\n", rect);
+  g_print("Area of rectangle(%p) is %u\n", rect, shape_calculate_area(_SHAPE(rect)));
+  rectangle_free(rect);
 
-  shape1 = g_object_new(SHAPE_TYPE, NULL);
-  g_print("shape1(%p) is created.\n", shape1);
-  g_object_unref(shape1);
-
-  shape2 = g_object_new(SHAPE_TYPE, NULL);
-  g_print("shape2(%p) is created.\n", shape2);
-  g_object_unref(shape2);
-
+  circle = circle_new(5);
+  g_print("Circle(%p) is created.\n", circle);
+  g_print("Area of circle(%p) is %u\n", circle, shape_calculate_area(_SHAPE(circle)));
+  circle_free(circle);
   return 0;
 }
